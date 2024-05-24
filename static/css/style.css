@@ -1,0 +1,65 @@
+.topnav {
+	background-color: #414141;
+	overflow: hidden;
+	display: flex;
+	padding: 5px;
+	align-items: center;
+}
+
+.topnav div {
+	color: #cc0000;
+	padding: 14px 16px;
+	font-size: 120%;
+	font-weight: bold;
+
+}
+
+.topnav a {
+	float: left;
+	color: #f2f2f2;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-size: 17px;
+}
+  
+.topnav a:hover {
+	background-color: #666666;
+	color: #FF0000;
+}
+  
+.topnav a.active {
+	background-color: #6a6c60;
+	color: 990000;
+}
+
+body {
+	color: white;
+	margin: 0;
+	background-color: #252525;
+}
+
+.computersdiv table {
+	margin-right: auto;
+	margin-left: auto;
+	text-align: center;
+	vertical-align: middle;
+	border-collapse: collapse;
+	background-color: #414141;
+	border: 1px solid;
+}
+
+.computersdiv td, th {
+	padding: 8px;
+}
+
+.computersdiv thead {
+	color: #cc0000;
+	background-color: #cc0000;
+	color: white;
+	font-size: 0.875rem;
+	text-transform: uppercase;
+	letter-spacing: 2%;
+}
+
+
