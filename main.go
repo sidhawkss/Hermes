@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"html/template"
-	"HermesC2/pkg/instance"
+	"HermesC2/pkg/data"
+	"HermesC2/pkg/operations"
 )
 
 
@@ -23,9 +24,7 @@ func ComputersHandle(w http.ResponseWriter, r *http.Request){
 		fmt.Println("Error: Template parsing.")
 	}
 
-	computers := instance.ShowInfo();
-	computers2 := instance.ShowInfo();
-	c := instance.Machine{Machines: []instance.CmpStat{computers, computers2}}
+	var c []data.Machine = operations.ReadData();
 	page.Execute(w, c);
 }
 

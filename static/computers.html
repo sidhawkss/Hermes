@@ -27,15 +27,15 @@
                 </tr>
             </thead>
             <tbody>
-		{{ range .Machines }}
+		    {{ range . }}
                 <tr>
-		    <td>{{.Hostname}}</td>
-		    <td>{{.Ip}}</td>
-		    <td>{{.Country}}</td>
-		    <td>{{.Username}}</td>
-		    <td>{{.Os}}</td>
+                    <td>{{.Hostname}}</td>
+                    <td>{{.Ip}}</td>
+                    <td>{{.Country}}</td>
+                    <td>{{.Username}}</td>
+                    <td>{{.Os}}</td>
                 </tr>
-		{{ end }} 
+		    {{ end }} 
             </tbody>
         </table> 
     </div>
