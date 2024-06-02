@@ -18,21 +18,21 @@ func Home(w http.ResponseWriter, r *http.Request){
 	page.Execute(w, nil)
 }
 
-func ComputersHandle(w http.ResponseWriter, r *http.Request){
-	page, err := template.ParseFiles("static/computers.html")
+func ComputerHandle(w http.ResponseWriter, r *http.Request){
+	page, err := template.ParseFiles("static/computer.html")
 	if err != nil {
 		fmt.Println("Error: Template parsing.")
 	}
-
-	var c []data.Machine = operations.ReadData();
-	page.Execute(w, c);
+	var d []data.Machine = operations.ReadData();
+	page.Execute(w, d);
+	
 }
 
 func main(){
 	mux := http.NewServeMux()
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("static/css"))))
 	mux.HandleFunc("/", Home)
-	mux.HandleFunc("/computers", ComputersHandle)
+	mux.HandleFunc("/computer", ComputerHandle)
 	fmt.Println("Running")
 
 	http.ListenAndServe(":3000", mux)
