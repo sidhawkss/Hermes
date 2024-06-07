@@ -10,7 +10,7 @@ import (
 
 
 func Home(w http.ResponseWriter, r *http.Request){
-	page, err := template.ParseFiles("static/index.html")
+	page, err := template.ParseFiles("static/home.html")
 	if err != nil {
 		fmt.Println("Error: Template parsing.")
 	}
@@ -19,14 +19,15 @@ func Home(w http.ResponseWriter, r *http.Request){
 }
 
 func ComputerHandle(w http.ResponseWriter, r *http.Request){
-	page, err := template.ParseFiles("static/computer.html")
+	page, err := template.ParseGlob("static/*.html")
 	if err != nil {
 		fmt.Println("Error: Template parsing.")
 	}
+
 	var d []data.Machine = operations.ReadData();
 	page.Execute(w, d);
-	
 }
+
 
 func main(){
 	mux := http.NewServeMux()

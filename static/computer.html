@@ -1,20 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css"/>
-    <title>HermesC2</title>
-</head>
-<body>
-    <header>
-        <div class="topnav">
-            <div>HermesC2</div>
-            <a href="/">main</a>
-            <a href="/computers">computers</a>
-        </div>
-    </header>
+{{ template "header.html" }}
+        <button class="button buttonadd" onclick="runcode()">
+            Add
+        </button>
     <div class="computersdiv">
+        
         <table>
             <caption></caption>
             <thead>
@@ -27,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-		    {{ range . }}
+		    {{ range .}}
                 <tr>
                     <td>{{.Hostname}}</td>
                     <td>{{.Ip}}</td>
@@ -39,5 +28,10 @@
             </tbody>
         </table> 
     </div>
-</body>
-</html>
+    <script>
+        function runcode(){
+            window.location = "/computer/add";
+        }
+    </script>
+{{ template "footer.html" }}
+

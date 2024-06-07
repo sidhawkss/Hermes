@@ -62,4 +62,29 @@ body {
 	letter-spacing: 2%;
 }
 
+.button {
+	height: 30px;
+	border-radius: 7px;
+	width: 100px;
+	color: rgb(0, 0, 0);
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	
+}
+
+.buttonadd {
+	background-color: #f2f2f2;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.button:hover {
+	background-color: #e0e0e0;
+	color:#ff0000;
+}
+
+
 
