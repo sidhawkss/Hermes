@@ -15,7 +15,10 @@
             </div>
         </header>
         <div class="add-menu-card">
-            <form class="add-menu-form">
+            <form class="add-menu-form" method="POST" action="/computer/add">
+                    {{ if . }}  
+                        <p>Success! Data stored.</p>
+                    {{ end }}
                     <input type="text" name="hostname" class="add-menu-input" placeholder="HOSTNAME"/>
                     <input type="text" name="ip" class="add-menu-input" placeholder="IP"/>
                     <input type="text" name="country" class="add-menu-input" placeholder="COUNTRY"/><br>

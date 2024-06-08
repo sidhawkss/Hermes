@@ -33,7 +33,15 @@ func ComputerAddHandle(w http.ResponseWriter, r *http.Request){
 	if err != nil {
 		fmt.Println("Error: Template parsing.")
 	}
-	page.Execute(w, nil);
+
+	if r.Method != http.MethodPost {
+		page.Execute(w,nil);
+	}else{
+		r.ParseForm();
+		operations.WriteData(r.FormValue("hostname"),r.FormValue("ip"),r.FormValue("country"),r.FormValue("username"),r.FormValue("os"));
+		page.Execute(w,1);
+	}
+	
 }
 
 
@@ -42,7 +50,7 @@ func main(){
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("static/css"))))
 	mux.HandleFunc("/", Home)
 	mux.HandleFunc("/computer", ComputerHandle)
-	mux.HandleFunc("/computer/add", ComputerAddHandle)
+	mux.HandleFunc("/computer/add", ComputerAddHandle);
 	fmt.Println("Running")
 
 	http.ListenAndServe(":3000", mux)
