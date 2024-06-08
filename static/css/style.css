@@ -62,4 +62,51 @@ body {
 	letter-spacing: 2%;
 }
 
+.button {
+	height: 30px;
+	border-radius: 7px;
+	width: 100px;
+	color: rgb(0, 0, 0);
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	
+}
 
+.buttonadd {
+	background-color: #f2f2f2;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.button:hover {
+	background-color: #e0e0e0;
+	color:#ff0000;
+}
+
+
+.add-menu-input{
+	border: 0px;
+	padding: 8px;
+	margin: 4px;
+	background-color: #f2f2f2;
+}
+
+.add-menu-card{
+	margin: auto;
+	text-align: center;
+	width: 30%;
+	background-color: #414141;
+	margin-top: 15px;
+	justify-content: center;
+	display: flex;
+	border: solid 1px #ffffff;
+}
+
+.add-menu-form{
+	display: flex;
+	flex-direction: column;
+	margin-top: 20px;
+}

@@ -6,38 +6,47 @@
     <link rel="stylesheet" href="/css/style.css"/>
     <title>HermesC2</title>
 </head>
-<body>
-    <header>
-        <div class="topnav">
-            <div>HermesC2</div>
-            <a href="/">main</a>
-            <a href="/computers">computers</a>
-        </div>
-    </header>
-    <div class="computersdiv">
-        <table>
-            <caption></caption>
-            <thead>
-                <tr>
-                    <th>Hostname</th>
-                    <th>IP</th>
-                    <th>Country</th>
-		    <th>Username</th>
-                    <th>OS</th>
-                </tr>
-            </thead>
-            <tbody>
-		    {{ range . }}
-                <tr>
-                    <td>{{.Hostname}}</td>
-                    <td>{{.Ip}}</td>
-                    <td>{{.Country}}</td>
-                    <td>{{.Username}}</td>
-                    <td>{{.Os}}</td>
-                </tr>
-		    {{ end }} 
-            </tbody>
-        </table> 
-    </div>
-</body>
+    <body>
+        <header>
+            <div class="topnav">
+                <div>HermesC2</div>
+                <a href="/">main</a>
+                <a href="/computer">computers</a>
+            </div>
+        </header>
+            <button class="button buttonadd" onclick="runcode()">Add</button>
+                <div class="computersdiv"> 
+                    <table>
+                        <caption></caption>
+                        <thead>
+                            <tr>
+                                <th>Hostname</th>
+                                <th>IP</th>
+                                <th>Country</th>
+                        <th>Username</th>
+                                <th>OS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {{ range .}}
+                            <tr>
+                                <td>{{.Hostname}}</td>
+                                <td>{{.Ip}}</td>
+                                <td>{{.Country}}</td>
+                                <td>{{.Username}}</td>
+                                <td>{{.Os}}</td>
+                            </tr>
+                        {{ end }} 
+                        </tbody>
+                    </table> 
+                </div>
+    </body>
+    <script>
+        function runcode(){
+            window.location = "/computer/add";
+        }
+    </script>
+    <br>
+    <marquee>Roots bloody roots</marquee>
 </html>
+
