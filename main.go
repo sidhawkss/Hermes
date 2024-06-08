@@ -19,7 +19,7 @@ func Home(w http.ResponseWriter, r *http.Request){
 }
 
 func ComputerHandle(w http.ResponseWriter, r *http.Request){
-	page, err := template.ParseGlob("static/*.html")
+	page, err := template.ParseFiles("static/computer.html")
 	if err != nil {
 		fmt.Println("Error: Template parsing.")
 	}
@@ -28,12 +28,21 @@ func ComputerHandle(w http.ResponseWriter, r *http.Request){
 	page.Execute(w, d);
 }
 
+func ComputerAddHandle(w http.ResponseWriter, r *http.Request){
+	page, err := template.ParseFiles("static/add.html")
+	if err != nil {
+		fmt.Println("Error: Template parsing.")
+	}
+	page.Execute(w, nil);
+}
+
 
 func main(){
 	mux := http.NewServeMux()
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("static/css"))))
 	mux.HandleFunc("/", Home)
 	mux.HandleFunc("/computer", ComputerHandle)
+	mux.HandleFunc("/computer/add", ComputerAddHandle)
 	fmt.Println("Running")
 
 	http.ListenAndServe(":3000", mux)

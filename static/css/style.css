@@ -87,4 +87,24 @@ body {
 }
 
 
+.add-menu-input{
+	border: 0px;
+	padding: 8px;
+	margin: 4px;
+	background-color: #f2f2f2;
+}
 
+.add-menu-card{
+	margin: auto;
+	text-align: center;
+	width: 30%;
+	background-color: #414141;
+	margin-top: 15px;
+	justify-content: center;
+	display: flex;
+	border: solid 1px #ffffff;
+}
+
+.add-menu-form{
+	margin-top: 20px;
+}
