@@ -110,3 +110,14 @@ body {
 	flex-direction: column;
 	margin-top: 20px;
 }
+
+.interact-console{
+	margin: auto;
+	text-align: center;
+	width: 30%;
+	background-color: #414141;
+	margin-top: 15px;
+	justify-content: center;
+	display: flex;
+	border: solid 1px #ffffff;
+}

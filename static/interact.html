@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css" />
+    <title>HermesC2</title>
+</head>
+
+<body>
+    <header>
+        <div class="topnav">
+            <div>HermesC2</div>
+            <a href="/">main</a>
+            <a href="/computer">computers</a>
+            <div>{{.Hostname}}</div>
+        </div>
+    </header>
+    <div class="frame">
+        <p>{{.Hostname}}</p>
+        <div id="console">
+            <div id="output"></div>
+            <div contenteditable="true" id="input">$ </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+    const hostname = {{.Hostname}};
+
+    input.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const command = input.innerText.trim();
+            if (command) {
+                processCommand(command);
+                input.innerText = ' ';
+            }
+        }
+    });
+
+    function processCommand(command) {
+        const result = `${hostname}-session$ ${command}\n`;
+        fetch();
+        output.innerText += result;
+        const consoleDiv = document.getElementById('console');
+        consoleDiv.scrollTop = consoleDiv.scrollHeight;
+    }
+</script>
+<style>
+    .frame {
+        margin: 25px;
+        width: auto;
+        height: auto
+    }
+
+    #console {
+        background-color: #1e1e1e;
+        border: 1px solid #888;
+        padding: 10px;
+        height: 400px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+    }
+
+    #input {
+        width: 100%;
+        outline: none;
+        border: none;
+        background: none;
+        color: #61dafb;
+        caret-color: #61dafb;
+    }
+</style>
+
+</html>
