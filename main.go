@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"net/http"
 	"html/template"
-	"HermesC2/pkg/data"
-	"HermesC2/pkg/operations"
+	"Hermes/pkg/data"
+	"Hermes/pkg/operations"
 )
 
-
-func Home(w http.ResponseWriter, r *http.Request){
+func HomeHandle(w http.ResponseWriter, r *http.Request){
 	page, err := template.ParseFiles("static/home.html")
 	if err != nil {
 		fmt.Println("Error: Template parsing.")
@@ -44,16 +43,32 @@ func ComputerAddHandle(w http.ResponseWriter, r *http.Request){
 	
 }
 
+func InteractHandle(w http.ResponseWriter, r *http.Request){
+	page, err := template.ParseFiles("static/interact.html")
+	if err != nil {
+		fmt.Println("Error: Template parsing.")
+	}
+
+	page.Execute(w, nil)
+}
+
+func InteractReceiverHandle(w http.ResponseWriter, r *http.Request){
+	if r.Method == http.MethodPost{
+		r.ParseForm();
+		w.Write([]byte(r.FormValue("data")));
+	}
+}
 
 func main(){
 	mux := http.NewServeMux()
-	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("static/css"))))
-	mux.HandleFunc("/", Home)
-	mux.HandleFunc("/computer", ComputerHandle)
+	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("static/css"))));
+	mux.HandleFunc("/", HomeHandle);
+	mux.HandleFunc("/computer", ComputerHandle);
 	mux.HandleFunc("/computer/add", ComputerAddHandle);
-	fmt.Println("Running")
+	mux.HandleFunc("/interact", InteractHandle);
+	mux.HandleFunc("/interact/receiver", InteractReceiverHandle);
 
+	fmt.Println("Running")
 	http.ListenAndServe(":3000", mux)
 }
-
 

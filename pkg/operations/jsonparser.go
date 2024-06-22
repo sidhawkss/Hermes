@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"encoding/json"
-	"HermesC2/pkg/data"
+	"Hermes/pkg/data"
 )
 
 func OpenJson() []data.Machine{
