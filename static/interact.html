@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css" />
-    <title>HermesC2</title>
+    <title>Hermes</title>
 </head>
 
 <body>
     <header>
         <div class="topnav">
-            <div>HermesC2</div>
+            <div>Hermes</div>
             <a href="/">main</a>
             <a href="/computer">computers</a>
             <div>{{.Hostname}}</div>
@@ -29,7 +29,7 @@
 <script>
     const input = document.getElementById('input');
     const output = document.getElementById('output');
-    const hostname = {{.Hostname}};
+    const hostname = "{{.Hostname}}";
 
     input.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
@@ -42,13 +42,24 @@
         }
     });
 
-    function processCommand(command) {
+    async function processCommand(command) {
         const result = `${hostname}-session$ ${command}\n`;
-        fetch();
-        output.innerText += result;
+        output.innerText += await performRequest(command);
         const consoleDiv = document.getElementById('console');
         consoleDiv.scrollTop = consoleDiv.scrollHeight;
-    }
+    };
+
+    async function performRequest(argument) {
+        const response = await fetch("http://localhost:3000/interact/receiver", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `data=${argument}`
+        });
+        const data = await response.text()+"\n";
+        return data;
+    };
 </script>
 <style>
     .frame {

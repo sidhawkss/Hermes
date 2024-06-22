@@ -1,3 +1,3 @@
-module HermesC2
+module Hermes
 
 go 1.22.3

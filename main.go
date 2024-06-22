@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"html/template"
-	"HermesC2/pkg/data"
-	"HermesC2/pkg/operations"
+	"Hermes/pkg/data"
+	"Hermes/pkg/operations"
 )
-
 
 func HomeHandle(w http.ResponseWriter, r *http.Request){
 	page, err := template.ParseFiles("static/home.html")
@@ -50,11 +49,14 @@ func InteractHandle(w http.ResponseWriter, r *http.Request){
 		fmt.Println("Error: Template parsing.")
 	}
 
-	if r.Method == http.MethodPost {
-
-	}
-
 	page.Execute(w, nil)
+}
+
+func InteractReceiverHandle(w http.ResponseWriter, r *http.Request){
+	if r.Method == http.MethodPost{
+		r.ParseForm();
+		w.Write([]byte(r.FormValue("data")));
+	}
 }
 
 func main(){
@@ -64,6 +66,7 @@ func main(){
 	mux.HandleFunc("/computer", ComputerHandle);
 	mux.HandleFunc("/computer/add", ComputerAddHandle);
 	mux.HandleFunc("/interact", InteractHandle);
+	mux.HandleFunc("/interact/receiver", InteractReceiverHandle);
 
 	fmt.Println("Running")
 	http.ListenAndServe(":3000", mux)
