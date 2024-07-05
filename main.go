@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"html/template"
 	"Hermes/pkg/data"
+	"Hermes/pkg/conn"
+	"Hermes/pkg/enc"
 	"Hermes/pkg/operations"
 )
 
@@ -55,7 +57,11 @@ func InteractHandle(w http.ResponseWriter, r *http.Request){
 func InteractReceiverHandle(w http.ResponseWriter, r *http.Request){
 	if r.Method == http.MethodPost{
 		r.ParseForm();
-		w.Write([]byte(r.FormValue("data")));
+		connectionType := r.PathValue("typeid");
+		secStr := enc.Encrypt(r.FormValue("data"));
+		resp := conn.SendDataTarget(secStr, connectionType);
+		
+		w.Write([]byte(resp+" "+secStr));
 	}
 }
 
@@ -66,7 +72,7 @@ func main(){
 	mux.HandleFunc("/computer", ComputerHandle);
 	mux.HandleFunc("/computer/add", ComputerAddHandle);
 	mux.HandleFunc("/interact", InteractHandle);
-	mux.HandleFunc("/interact/receiver", InteractReceiverHandle);
+	mux.HandleFunc("/interact/receiver/{typeid}", InteractReceiverHandle);
 
 	fmt.Println("Running")
 	http.ListenAndServe(":3000", mux)

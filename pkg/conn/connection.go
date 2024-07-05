@@ -1,18 +1,19 @@
 package conn
 
 import (
-	"os"
-	"fmt"
-	"net"
+	
 )
 
-// Just Test
-func Connectp string)(net.Conn){
-	connection, err := net.Dial("tcp", p)
-	if err != nil {
-		fmt.Println("Error connecting  with the client.")
-	} else {
-		fmt.Printf("Connection established with %s \n", connection.RemoteAddr())
+func SendDataTarget(sec_str string, connection_type string) string{
+	switch(connection_type){
+	case "0":
+		return "DNS"
+	case "1":
+		return "HTTP"
+	case "2":
+		return "WEBSOCKET"
+	default:
+		return "NOT IMPLEMENTED"
 	}
-	return connection
+	return ""
 }
