@@ -36,7 +36,7 @@
                                 <td>{{.Country}}</td>
                                 <td>{{.Username}}</td>
                                 <td>{{.Os}}</td>
-                                <td><input class="button p-button" type="submit" value="console" onclick="callInteract()"/></td>
+                                <td><input class="button p-button" type="submit" value="console" onclick="callInteract('{{.Id}}')"/></td>
                             </tr>
                         {{ end }} 
                         </tbody>
@@ -47,8 +47,8 @@
         function runcode(){
             window.location = "/computer/add";
         }
-        function callInteract(){
-            window.location.replace("/interact");
+        function callInteract(identification){
+            window.location.replace("/interact/"+identification);
         }
     </script>
     <br>

@@ -1,19 +1,55 @@
 package conn
 
 import (
-	
+	"fmt"
 )
 
-func SendDataTarget(sec_str string, connection_type string) string{
-	switch(connection_type){
+type Interact interface{
+	Dns() string
+	Http() string
+	Websocket() string
+	getType() string
+}
+
+type Data struct{
+	SecureString string
+	ConnectionType string
+}
+
+func SendDataTarget(i Interact) string{
+	switch(i.getType()){
 	case "0":
-		return "DNS"
+		return i.Dns();
 	case "1":
-		return "HTTP"
+		return i.Http();
 	case "2":
-		return "WEBSOCKET"
+		return i.Websocket();
 	default:
 		return "NOT IMPLEMENTED"
 	}
-	return ""
+}
+
+func (d Data) Dns() string{
+	
+	for i:=16; i <= len(d.SecureString); i += 16{
+		chunk := d.SecureString[i-16:i];
+		fmt.Println(chunk);
+		//net.LookupIP(sstr+".dns");
+	}
+	// send done message
+	// wait response, 
+	// return response,
+	return "DNS SENT"
+}
+
+func (d Data) Http() string{
+	return "HTTP"
+}
+
+func (d Data) Websocket() string{
+	return "WEBSOCKET"
+}
+
+func (d Data) getType() string{
+	return d.ConnectionType
 }

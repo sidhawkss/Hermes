@@ -57,11 +57,10 @@ func InteractHandle(w http.ResponseWriter, r *http.Request){
 func InteractReceiverHandle(w http.ResponseWriter, r *http.Request){
 	if r.Method == http.MethodPost{
 		r.ParseForm();
-		connectionType := r.PathValue("typeid");
-		secStr := enc.Encrypt(r.FormValue("data"));
-		resp := conn.SendDataTarget(secStr, connectionType);
+		data := conn.Data{SecureString: enc.Encrypt(r.FormValue("data")), ConnectionType: r.PathValue("typeid")};
+		response := conn.SendDataTarget(data);
 		
-		w.Write([]byte(resp+" "+secStr));
+		w.Write([]byte(response));
 	}
 }
 
@@ -71,7 +70,7 @@ func main(){
 	mux.HandleFunc("/", HomeHandle);
 	mux.HandleFunc("/computer", ComputerHandle);
 	mux.HandleFunc("/computer/add", ComputerAddHandle);
-	mux.HandleFunc("/interact", InteractHandle);
+	mux.HandleFunc("/interact/{id}", InteractHandle);
 	mux.HandleFunc("/interact/receiver/{typeid}", InteractReceiverHandle);
 
 	fmt.Println("Running")
