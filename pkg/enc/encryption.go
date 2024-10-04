@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-var key []byte = []byte("")
+var key []byte = []byte("0123456789ABCDEF")
 
 func padding(data []byte, blockSize int) []byte {
 	padding := blockSize - (len(data) % blockSize)

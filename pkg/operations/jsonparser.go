@@ -2,6 +2,7 @@ package operations
 
 import (
 	"fmt"
+	"strconv"
 	"io/ioutil"
 	"encoding/json"
 	"Hermes/pkg/data"
@@ -30,7 +31,12 @@ func ReadData() []data.Machine{
 
 func WriteData(hostname string, ip string, country string, username string, os string) []data.Machine{
 	var machines []data.Machine = OpenJson();
-	newObject := &data.Machine{ Status: data.Status{ 
+	// implement automatic id
+
+	var d []data.Machine = ReadData();
+
+	newObject := &data.Machine{ Status: data.Status{
+		Id: strconv.Itoa(len(d)+1),
 		Hostname: hostname, 
 		Ip: ip, 
 		Country: country, 

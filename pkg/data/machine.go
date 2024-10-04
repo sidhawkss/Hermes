@@ -1,6 +1,7 @@
 package data
 
 type Status struct{
+	Id string
 	Hostname string
 	Ip	 string
 	Country string

@@ -23,18 +23,20 @@
                                 <th>Hostname</th>
                                 <th>IP</th>
                                 <th>Country</th>
-                        <th>Username</th>
+                                <th>Username</th>
                                 <th>OS</th>
+                                <th>Interact</th>
                             </tr>
                         </thead>
                         <tbody>
                         {{ range .}}
-                            <tr>
+                            <tr style="selection-color: blue;">
                                 <td>{{.Hostname}}</td>
                                 <td>{{.Ip}}</td>
                                 <td>{{.Country}}</td>
                                 <td>{{.Username}}</td>
                                 <td>{{.Os}}</td>
+                                <td><input class="button p-button" type="submit" value="console" onclick="callInteract('{{.Id}}')"/></td>
                             </tr>
                         {{ end }} 
                         </tbody>
@@ -45,8 +47,22 @@
         function runcode(){
             window.location = "/computer/add";
         }
+        function callInteract(identification){
+            window.location.replace("/interact/"+identification);
+        }
     </script>
     <br>
     <marquee>Roots bloody roots</marquee>
+    <style>
+        .p-button{
+            color: white;
+            background-color: black;
+            margin: 6px;
+            width: 90%;
+            height: 25%;
+            border-radius: 1px;
+            border: 0px;
+        }
+    </style>
 </html>
 
