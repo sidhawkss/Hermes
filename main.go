@@ -11,28 +11,28 @@ import (
 )
 
 func HomeHandle(w http.ResponseWriter, r *http.Request){
-	page, err := template.ParseFiles("static/home.html")
+	page, err := template.ParseFiles("static/home.html");
 	if err != nil {
-		fmt.Println("Error: Template parsing.")
+		fmt.Println("Error: Template parsing.");
 	}
 
-	page.Execute(w, nil)
+	page.Execute(w, nil);
 }
 
 func ComputerHandle(w http.ResponseWriter, r *http.Request){
-	page, err := template.ParseFiles("static/computer.html")
+	page, err := template.ParseFiles("static/computer.html");
 	if err != nil {
-		fmt.Println("Error: Template parsing.")
+		fmt.Println("Error: Template parsing.");
 	}
 
-	var d []data.Machine = operations.ReadData();
-	page.Execute(w, d);
+	var machines []data.Machine = operations.ReadData();
+	page.Execute(w, machines);
 }
 
 func ComputerAddHandle(w http.ResponseWriter, r *http.Request){
-	page, err := template.ParseFiles("static/add.html")
+	page, err := template.ParseFiles("static/add.html");
 	if err != nil {
-		fmt.Println("Error: Template parsing.")
+		fmt.Println("Error: Template parsing.");
 	}
 
 	if r.Method != http.MethodPost {
@@ -46,19 +46,29 @@ func ComputerAddHandle(w http.ResponseWriter, r *http.Request){
 }
 
 func InteractHandle(w http.ResponseWriter, r *http.Request){
-	page, err := template.ParseFiles("static/interact.html")
+	page, err := template.ParseFiles("static/interact.html");
 	if err != nil {
-		fmt.Println("Error: Template parsing.")
+		fmt.Println("Error: Template parsing.");
+	}
+	
+	var currentId string = r.PathValue("id");
+	var machines []data.Machine = operations.ReadData();
+	var currentMachine data.Machine;
+	for i := 0; i < len(machines); i++ {
+		if currentId == machines[i].Id {
+			currentMachine = machines[i];
+		}
 	}
 
-	page.Execute(w, nil)
+	fmt.Println(currentMachine);
+	page.Execute(w, currentMachine);
 }
 
 func InteractReceiverHandle(w http.ResponseWriter, r *http.Request){
 	if r.Method == http.MethodPost{
 		r.ParseForm();
 		data := conn.Data{SecureString: enc.Encrypt(r.FormValue("data")), ConnectionType: r.PathValue("typeid")};
-		response := conn.SendDataTarget(data);
+		response := conn.SendDataTarget(data,r.PathValue("id"));
 		
 		w.Write([]byte(response));
 	}
@@ -71,9 +81,8 @@ func main(){
 	mux.HandleFunc("/computer", ComputerHandle);
 	mux.HandleFunc("/computer/add", ComputerAddHandle);
 	mux.HandleFunc("/interact/{id}", InteractHandle);
-	mux.HandleFunc("/interact/receiver/{typeid}", InteractReceiverHandle);
+	mux.HandleFunc("/interact/{id}/receiver/{typeid}", InteractReceiverHandle);
 
-	fmt.Println("Running")
-	http.ListenAndServe(":3000", mux)
+	fmt.Println("[MAIN][SUCCESS] running process in port 3000")
+	http.ListenAndServe(":3000",mux)
 }
-
