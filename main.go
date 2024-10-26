@@ -7,7 +7,7 @@ import (
 	"Hermes/pkg/data"
 	"Hermes/pkg/conn"
 	"Hermes/pkg/enc"
-	"Hermes/pkg/operations"
+	"Hermes/pkg/tools"
 )
 
 func HomeHandle(w http.ResponseWriter, r *http.Request){
@@ -24,8 +24,8 @@ func ComputerHandle(w http.ResponseWriter, r *http.Request){
 	if err != nil {
 		fmt.Println("Error: Template parsing.");
 	}
-
-	var machines []data.Machine = operations.ReadData();
+	
+	var machines []data.Machine = tools.ReadData();
 	page.Execute(w, machines);
 }
 
@@ -39,7 +39,7 @@ func ComputerAddHandle(w http.ResponseWriter, r *http.Request){
 		page.Execute(w,nil);
 	}else{
 		r.ParseForm();
-		operations.WriteData(r.FormValue("hostname"),r.FormValue("ip"),r.FormValue("country"),r.FormValue("username"),r.FormValue("os"));
+		tools.WriteData(r.FormValue("hostname"),r.FormValue("ip"),r.FormValue("country"),r.FormValue("username"),r.FormValue("os"));
 		page.Execute(w,1);
 	}
 	
@@ -47,21 +47,12 @@ func ComputerAddHandle(w http.ResponseWriter, r *http.Request){
 
 func InteractHandle(w http.ResponseWriter, r *http.Request){
 	page, err := template.ParseFiles("static/interact.html");
+	var currentId string = r.PathValue("id");
 	if err != nil {
 		fmt.Println("Error: Template parsing.");
 	}
 	
-	var currentId string = r.PathValue("id");
-	var machines []data.Machine = operations.ReadData();
-	var currentMachine data.Machine;
-	for i := 0; i < len(machines); i++ {
-		if currentId == machines[i].Id {
-			currentMachine = machines[i];
-		}
-	}
-
-	fmt.Println(currentMachine);
-	page.Execute(w, currentMachine);
+	page.Execute(w, tools.SelectById(currentId));
 }
 
 func InteractReceiverHandle(w http.ResponseWriter, r *http.Request){

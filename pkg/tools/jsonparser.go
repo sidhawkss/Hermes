@@ -1,4 +1,4 @@
-package operations
+package tools
 
 import (
 	"fmt"
@@ -25,18 +25,13 @@ func OpenJson() []data.Machine{
 
 func ReadData() []data.Machine{
 	var machines []data.Machine = OpenJson();
-	
 	return machines;
 }
 
 func WriteData(hostname string, ip string, country string, username string, os string) []data.Machine{
-	var machines []data.Machine = OpenJson();
-	// implement automatic id
-
-	var d []data.Machine = ReadData();
-
-	newObject := &data.Machine{ Status: data.Status{
-		Id: strconv.Itoa(len(d)+1),
+	var machines []data.Machine = ReadData(); // implement automatic ids
+	newObject := &data.Machine{Status: data.Status{
+		Id: strconv.Itoa(len(machines)+1),
 		Hostname: hostname, 
 		Ip: ip, 
 		Country: country, 
@@ -44,13 +39,23 @@ func WriteData(hostname string, ip string, country string, username string, os s
 		Os: os, 
 	}};
 
-	machines = append(machines, *newObject);
-	jData, err := json.Marshal(machines);
+	jData, err := json.Marshal(append(machines, *newObject));
 	if err != nil{
 		fmt.Println("Error: Marshal data");
 	}
-
+	
 	err = ioutil.WriteFile("utils/data.json", jData, 0640);
-
 	return machines;
+}
+
+func SelectById(machineID string) data.Machine{
+	var machines []data.Machine = ReadData();
+	var currentMachine data.Machine;
+	for i := 0; i < len(machines); i++ {
+		if machineID == machines[i].Id {
+			currentMachine = machines[i];
+		}
+	}
+
+	return currentMachine;
 }
