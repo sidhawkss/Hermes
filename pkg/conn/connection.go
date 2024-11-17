@@ -7,6 +7,8 @@ import (
 	"context"
 	"net/http"
 	"io/ioutil"
+	"Hermes/pkg/data"
+	"Hermes/pkg/tools"
 	//"Hermes/pkg/enc"
 )
 
@@ -18,7 +20,7 @@ type Interact interface{
 }
 
 type Data struct{
-	SecureString string
+	CommandString string
 	ConnectionType string
 }
 
@@ -45,11 +47,12 @@ func SendDataTarget(i Interact, machineID string) string{
 }
 
 func (d Data) Dns() string{
-	for i:=16; i <= len(d.SecureString); i += 16{
-		chunk := d.SecureString[i-16:i];
+	var secureString string = d.CommandString;
+	for i:=16; i <= len(secureString); i += 16{
+		chunk := secureString[i-16:i];
 		ips, err := Resolv.LookupIPAddr(context.Background(),chunk+".localhost"); // format check
 		if err != nil {
-			fmt.Println("[CONNECTION][DNS][ERROR] resolution error");
+			fmt.Println("[CONNECTION][DNS][ERROR] resolution error.");
 		}
 		fmt.Println(ips);
 	}
@@ -60,20 +63,27 @@ func (d Data) Dns() string{
 /* The connection needs to be closed, so the user can't control the destination URL to avoid SSRF */
 /* create an interface to handle the machine, to make a ID to the machine, and perform actions based on this ID, and only will work with the ID */
 func (d Data) Http(machineID string) string{
-	var URL string = fmt.Sprintf("http://%s:5000/",machineID) // format check
-	var command *strings.Reader = strings.NewReader(d.SecureString);
-	res, err := http.Post(URL, "text/html", command);
-	if err != nil {
-        fmt.Println("[CONNECTION][HTTP][ERROR] invalid request");
-    }
-
-	body, err := ioutil.ReadAll(res.Body);
-	fmt.Println(body);
-	if err != nil {
-		fmt.Println("[CONNECTION][HTTP][ERROR] no response");
+	var currentMachine data.Machine = tools.SelectById(machineID);
+	if(tools.VerifyDestination(currentMachine.Ip) != true){
+		fmt.Println("[CONNECTION][HTTP][ERROR] Invalid Ip.");
+		return "";
+	} else {
+		var URL string = fmt.Sprintf("http://%s:4000/",currentMachine.Ip) // format check
+		var command *strings.Reader = strings.NewReader(d.CommandString);
+		res, err := http.Post(URL, "text/html", command);
+		if err != nil {
+			fmt.Println("[CONNECTION][HTTP][ERROR] Invalid request.");
+		}
+	
+		body, err := ioutil.ReadAll(res.Body);
+		if err != nil {
+			fmt.Println("[CONNECTION][HTTP][ERROR] No response.");
+		}
+		return string(body);
 	}
 
-	return string(body);
+
+
 }
 
 func (d Data) Websocket() string{

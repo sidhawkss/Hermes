@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"Hermes/pkg/data"
 	"Hermes/pkg/conn"
-	"Hermes/pkg/enc"
 	"Hermes/pkg/tools"
 )
 
@@ -58,7 +57,7 @@ func InteractHandle(w http.ResponseWriter, r *http.Request){
 func InteractReceiverHandle(w http.ResponseWriter, r *http.Request){
 	if r.Method == http.MethodPost{
 		r.ParseForm();
-		data := conn.Data{SecureString: enc.Encrypt(r.FormValue("data")), ConnectionType: r.PathValue("typeid")};
+		data := conn.Data{CommandString: r.FormValue("data"), ConnectionType: r.PathValue("typeid")};
 		response := conn.SendDataTarget(data,r.PathValue("id"));
 		
 		w.Write([]byte(response));
@@ -74,6 +73,6 @@ func main(){
 	mux.HandleFunc("/interact/{id}", InteractHandle);
 	mux.HandleFunc("/interact/{id}/receiver/{typeid}", InteractReceiverHandle);
 
-	fmt.Println("[MAIN][SUCCESS] running process in port 3000")
+	fmt.Println("[MAIN][SUCCESS] Running process in port 3000")
 	http.ListenAndServe(":3000",mux)
 }
