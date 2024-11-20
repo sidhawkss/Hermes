@@ -3,19 +3,23 @@ package conn
 import (
 	"fmt"
 	"net"
+	"strings"
 	"context"
-	//"Hermes/pkg/enc"
+	"net/http"
+	"io/ioutil"
+	"Hermes/pkg/data"
+	"Hermes/pkg/tools"
 )
 
 type Interact interface{
 	Dns() string
-	Http() string
+	Http(machineID string) string
 	Websocket() string
 	getType() string
 }
 
 type Data struct{
-	SecureString string
+	CommandString string
 	ConnectionType string
 }
 
@@ -25,45 +29,65 @@ var Resolv = &net.Resolver{
 	Dial: func(ctx context.Context, network, address string) (net.Conn, error){
 		var d net.Dialer;
 		return d.DialContext(ctx, "udp", dnsServer);
-	},
-	
-};
+	}
+}
 
-func SendDataTarget(i Interact) string{
+func SendDataTarget(i Interact, machineID string) string{
 	switch(i.getType()){
 	case "0":
 		return i.Dns();
 	case "1":
-		return i.Http();
+		return i.Http(machineID);
 	case "2":
 		return i.Websocket();
 	default:
-		return "NOT IMPLEMENTED"
+		return "NOT IMPLEMENTED";
 	}
 }
 
 func (d Data) Dns() string{
-	for i:=16; i <= len(d.SecureString); i += 16{
-		chunk := d.SecureString[i-16:i];
-		ips, err := Resolv.LookupIPAddr(context.Background(),chunk+".localhost");
+	var secureString string = d.CommandString;
+	for i:=16; i <= len(secureString); i += 16{
+		chunk := secureString[i-16:i];
+		ips, err := Resolv.LookupIPAddr(context.Background(),chunk+".localhost"); // format check
 		if err != nil {
-			fmt.Println("Resolution error");
+			fmt.Println("[CONNECTION][DNS][ERROR] resolution error.");
 		}
 		fmt.Println(ips);
 	}
-	//handle response
-	
-	return "a"
+	//handle responses
+	return "a";
 }
 
-func (d Data) Http() string{
-	return "HTTP"
+/* The connection needs to be closed, so the user can't control the destination URL to avoid SSRF */
+/* create an interface to handle the machine, to make a ID to the machine, and perform actions based on this ID, and only will work with the ID */
+func (d Data) Http(machineID string) string{
+	var currentMachine data.Machine = tools.SelectById(machineID);
+	if(tools.VerifyAddr(currentMachine.Ip) != true){
+		fmt.Println("[CONNECTION][HTTP][ERROR] Invalid Ip.");
+		return "";
+	} else {
+		var URL string = fmt.Sprintf("http://%s:4000/",currentMachine.Ip) // format check
+		var command *strings.Reader = strings.NewReader(d.CommandString);
+
+		res, err := http.Post(URL, "text/html", command);
+		if err != nil {
+			fmt.Println("[CONNECTION][HTTP][ERROR] Invalid request.");
+		}
+	
+		body, err := ioutil.ReadAll(res.Body);
+		if err != nil {
+			fmt.Println("[CONNECTION][HTTP][ERROR] No response.");
+		}
+		
+		return string(body);
+	}
 }
 
 func (d Data) Websocket() string{
-	return "WEBSOCKET"
+	return "WEBSOCKET";
 }
 
 func (d Data) getType() string{
-	return d.ConnectionType
+	return d.ConnectionType;
 }
