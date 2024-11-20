@@ -9,7 +9,6 @@ import (
 	"io/ioutil"
 	"Hermes/pkg/data"
 	"Hermes/pkg/tools"
-	//"Hermes/pkg/enc"
 )
 
 type Interact interface{
@@ -30,8 +29,8 @@ var Resolv = &net.Resolver{
 	Dial: func(ctx context.Context, network, address string) (net.Conn, error){
 		var d net.Dialer;
 		return d.DialContext(ctx, "udp", dnsServer);
-	},
-};
+	}
+}
 
 func SendDataTarget(i Interact, machineID string) string{
 	switch(i.getType()){
@@ -42,7 +41,7 @@ func SendDataTarget(i Interact, machineID string) string{
 	case "2":
 		return i.Websocket();
 	default:
-		return "NOT IMPLEMENTED"
+		return "NOT IMPLEMENTED";
 	}
 }
 
@@ -57,19 +56,20 @@ func (d Data) Dns() string{
 		fmt.Println(ips);
 	}
 	//handle responses
-	return "a"
+	return "a";
 }
 
 /* The connection needs to be closed, so the user can't control the destination URL to avoid SSRF */
 /* create an interface to handle the machine, to make a ID to the machine, and perform actions based on this ID, and only will work with the ID */
 func (d Data) Http(machineID string) string{
 	var currentMachine data.Machine = tools.SelectById(machineID);
-	if(tools.VerifyDestination(currentMachine.Ip) != true){
+	if(tools.VerifyAddr(currentMachine.Ip) != true){
 		fmt.Println("[CONNECTION][HTTP][ERROR] Invalid Ip.");
 		return "";
 	} else {
 		var URL string = fmt.Sprintf("http://%s:4000/",currentMachine.Ip) // format check
 		var command *strings.Reader = strings.NewReader(d.CommandString);
+
 		res, err := http.Post(URL, "text/html", command);
 		if err != nil {
 			fmt.Println("[CONNECTION][HTTP][ERROR] Invalid request.");
@@ -79,17 +79,15 @@ func (d Data) Http(machineID string) string{
 		if err != nil {
 			fmt.Println("[CONNECTION][HTTP][ERROR] No response.");
 		}
+		
 		return string(body);
 	}
-
-
-
 }
 
 func (d Data) Websocket() string{
-	return "WEBSOCKET"
+	return "WEBSOCKET";
 }
 
 func (d Data) getType() string{
-	return d.ConnectionType
+	return d.ConnectionType;
 }

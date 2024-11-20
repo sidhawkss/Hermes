@@ -37,7 +37,7 @@ func WriteData(hostname string, ip string, country string, username string, os s
 		Country: country, 
 		Username: username,
 		Os: os, 
-	}};
+	}}
 
 	jData, err := json.Marshal(append(machines, *newObject));
 	if err != nil{

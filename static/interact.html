@@ -43,7 +43,7 @@
         <p></p>
         <div id="console">
             <div id="output"></div>
-            <div contenteditable="true" id="input">$ </div>
+            <div id="command">{{.Hostname}}@{{.Ip}}$&nbsp<div contenteditable="true" id="input"></div></div>
         </div>
         <label for="connectionType">Connection Type:</label>
         <select style="margin-top: 15px;" id="connectionType" name="connectionType">
@@ -102,12 +102,13 @@
     #console {
         background-color: #4d4d4d;
         border: 1px solid #888;
-        padding: 10px;
+        padding: 3px;
         height: 400px;
+        border: 0px;
         overflow-y: auto;
         white-space: pre-wrap;
     }
-
+    
     #input {
         width: 100%;
         outline: none;
@@ -115,6 +116,11 @@
         background: none;
         color: #61dafb;
         caret-color: #61dafb;
+    }
+
+    #command {
+        display: flex !important;
+        color: red;
     }
 </style>
 

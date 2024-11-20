@@ -73,6 +73,6 @@ func main(){
 	mux.HandleFunc("/interact/{id}", InteractHandle);
 	mux.HandleFunc("/interact/{id}/receiver/{typeid}", InteractReceiverHandle);
 
-	fmt.Println("[MAIN][SUCCESS] Running process in port 3000")
-	http.ListenAndServe(":3000",mux)
+	fmt.Println("[MAIN][SUCCESS] Running process in port 3000");
+	http.ListenAndServe(":3000",mux);
 }
