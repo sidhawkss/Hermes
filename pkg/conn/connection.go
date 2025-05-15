@@ -3,12 +3,14 @@ package conn
 import (
 	"fmt"
 	"net"
+	"errors"
 	"strings"
-	"context"
 	"net/http"
 	"io/ioutil"
+	"Hermes/pkg/enc"
 	"Hermes/pkg/data"
 	"Hermes/pkg/tools"
+	"Hermes/pkg/events"
 )
 
 type Interact interface{
@@ -26,10 +28,7 @@ type Data struct{
 var dnsServer string = "127.0.0.1:53";
 var Resolv = &net.Resolver{
 	PreferGo: true,
-	Dial: func(ctx context.Context, network, address string) (net.Conn, error){
-		var d net.Dialer;
-		return d.DialContext(ctx, "udp", dnsServer);
-	}
+	
 }
 
 func SendDataTarget(i Interact, machineID string) string{
@@ -46,42 +45,28 @@ func SendDataTarget(i Interact, machineID string) string{
 }
 
 func (d Data) Dns() string{
-	var secureString string = d.CommandString;
-	for i:=16; i <= len(secureString); i += 16{
-		chunk := secureString[i-16:i];
-		ips, err := Resolv.LookupIPAddr(context.Background(),chunk+".localhost"); // format check
-		if err != nil {
-			fmt.Println("[CONNECTION][DNS][ERROR] resolution error.");
-		}
-		fmt.Println(ips);
-	}
-	//handle responses
 	return "a";
 }
 
-/* The connection needs to be closed, so the user can't control the destination URL to avoid SSRF */
-/* create an interface to handle the machine, to make a ID to the machine, and perform actions based on this ID, and only will work with the ID */
 func (d Data) Http(machineID string) string{
 	var currentMachine data.Machine = tools.SelectById(machineID);
-	if(tools.VerifyAddr(currentMachine.Ip) != true){
-		fmt.Println("[CONNECTION][HTTP][ERROR] Invalid Ip.");
-		return "";
+
+	if(tools.VerifyAddr(currentMachine.Ip) == false){
+		events.ConnectionEventCustom(errors.New(""), "Invalid Ip");
+		return "Invalid Ip";
 	} else {
 		var URL string = fmt.Sprintf("http://%s:4000/",currentMachine.Ip) // format check
-		var command *strings.Reader = strings.NewReader(d.CommandString);
+		var command *strings.Reader = strings.NewReader(enc.Encrypt(d.CommandString));
 
 		res, err := http.Post(URL, "text/html", command);
-		if err != nil {
-			fmt.Println("[CONNECTION][HTTP][ERROR] Invalid request.");
+		events.ConnectionEventCustom(err, "Invalid request");
+		if( err == nil){
+			body, err := ioutil.ReadAll(res.Body);
+			events.ConnectionEventCustom(err, "No response");
+			return string(body);
 		}
-	
-		body, err := ioutil.ReadAll(res.Body);
-		if err != nil {
-			fmt.Println("[CONNECTION][HTTP][ERROR] No response.");
-		}
-		
-		return string(body);
 	}
+	return "no connection"
 }
 
 func (d Data) Websocket() string{
